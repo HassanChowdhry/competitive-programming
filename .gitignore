@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+*.cph
+*.run
+*.bin
+*.vscode
