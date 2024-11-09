@@ -1,3 +1,4 @@
+#! this does not work
 nt, ns, dist = input().split()
 nt, ns, dist = int(nt), int(ns), int(dist)
 

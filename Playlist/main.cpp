@@ -9,11 +9,21 @@
 # define nline "\n"
 using namespace std;
 int MOD=1000000007;
-bool valid(int x,int y,int n,int m){return x>=0 && x<n && y>=0 && y<m;}
-int powMod(int a,int n){ ll ans=1;for(int i=1;i<=n;i++){ ans=(ans*a)%MOD;}return ans%MOD; }
-
-
+ 
 int main() {
-  // cin >> ;
-  // cout << ;
+  int n, num; cin >> n;
+  vector<int> nums(n); set<int> cnt;
+  loop(n)
+    { cin>>num; nums[i]=num; }
+  
+  int l = 0, r = 0, res = 0;
+  while (r < n) {
+    while (l < r && cnt.count(nums[r]))
+      { cnt.erase(nums[l]); ++l; }
+ 
+    cnt.insert(nums[r]);
+    res = max(res, r - l + 1);
+    ++r;
+  }
+  cout << res;
 }
