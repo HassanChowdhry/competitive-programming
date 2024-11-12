@@ -23,18 +23,18 @@ int main() {
     if (nums[i+1] == 0) {
       if (nums[i] == 0) {
         for (int j = 1; j <= m; ++j) {
-            left = j-1 > 0 ? dp[i][j-1] : 0;
-            middle = dp[i][j];
-            right = j+1 <= m ? dp[i][j+1] : 0;
-            dp[i+1][j] = (left + middle + right) % MOD;
+          left = j-1 > 0 ? dp[i][j-1] : 0;
+          middle = dp[i][j];
+          right = j+1 <= m ? dp[i][j+1] : 0;
+          dp[i+1][j] = (left + middle + right) % MOD;
         }
       } else {
-            ll curr = dp[i][nums[i]];
-            if (nums[i]-1 > 0)
-              { dp[i+1][nums[i]-1] = curr; }
-            dp[i+1][nums[i]] = curr;
-            if (nums[i]+1 <= m)
-              { dp[i+1][nums[i]+1] = curr; }
+          ll curr = dp[i][nums[i]];
+          if (nums[i]-1 > 0)
+            { dp[i+1][nums[i]-1] = curr; }
+          dp[i+1][nums[i]] = curr;
+          if (nums[i]+1 <= m)
+            { dp[i+1][nums[i]+1] = curr; }
         }
     } else {
         if (nums[i] == 0) {
