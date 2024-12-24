@@ -9,7 +9,6 @@
 # define nline "\n"
 using namespace std;
 int MOD=1000000007;
-
 int main() {
   int n; cin >> n;
   ll sum = 0; bool found = false;
