@@ -21,10 +21,18 @@ int MOD=1000000007;
 bool valid(int x,int y,int n,int m){return x>=0 && x<n && y>=0 && y<m;}
 int powMod(int a,int n){ ll ans=1;for(int i=1;i<=n;i++){ ans=(ans*a)%MOD;}return ans%MOD; }
 
-void solve() {}
+void solve() {
+  int n; cin >> n;
+  vi nums(n, 0); input(nums, n);
+  if (n >= 2)
+    cout << nums[0] + min(nums[0], nums[1]) << ln;
+  else
+    cout << nums[0] << ln;
+}
 
 int main() {
   flash;
-  solve();
+  int t; cin >> t;
+  rep(_, t) solve();
   return 0;
 }

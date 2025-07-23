@@ -18,34 +18,29 @@ using namespace std;
 #define vi vector<int>
 #define vl vector<ll>
 int MOD=1000000007;
+bool valid(int x,int y,int n,int m){return x>=0 && x<n && y>=0 && y<m;}
+int powMod(int a,int n){ ll ans=1;for(int i=1;i<=n;i++){ ans=(ans*a)%MOD;}return ans%MOD; }
 
 void solve() {
   int n; cin >> n;
-  vi nums(n, 0); input(nums, n);
-  vi sorted_nums(nums);
-  sort(sorted_nums.begin(), sorted_nums.end());
-
-  int skip = 0;
-  set<int> skip_list;
-
-  for (int i = 0; i < n; ++i) {
-    if (nums[i] == sorted_nums[i]) { ++skip; skip_list.insert(i); }
+  vector<ll> nums(n, 0), dp(n, 0);
+  for(int i =0 ; i < n; ++i) {
+    cin >> nums[i];
   }
-
-  if (skip == n) { cout << "NO" << ln; return; }
-
-  cout << "YES" << ln;
-  cout << (n - skip) << ln;
-  rep(i, n) {
-    if (skip_list.count(i)) continue;
-    cout << nums[i] << " ";
+  dp[0] = 0; dp[1] = abs(nums[1] - nums[0]);
+  
+  for(int i = 2; i < n; ++i) {
+    dp[i] = min(
+      abs(nums[i] - nums[i-1]) + dp[i-1],
+      abs(nums[i] - nums[i-2]) + dp[i-2]
+    );
   }
-  cout << ln;
+  
+  cout << dp[n-1] << "\n";
 }
 
 int main() {
   flash;
-  int t; cin >> t;
-  rep(_, t) solve();
+  solve();
   return 0;
 }

@@ -18,27 +18,33 @@ using namespace std;
 #define vi vector<int>
 #define vl vector<ll>
 int MOD=1000000007;
+int INF=int(1e9);
 bool valid(int x,int y,int n,int m){return x>=0 && x<n && y>=0 && y<m;}
 int powMod(int a,int n){ ll ans=1;for(int i=1;i<=n;i++){ ans=(ans*a)%MOD;}return ans%MOD; }
 
 void solve() {
   int n; cin >> n;
-  vi nums(n, 0); input(nums, n);
-  int res = 1;
-  rep(i, n-1) {
-    if (nums[i + 1] % nums[i] != 0) {
-      int divisor = gcd(nums[i+1], nums[i]);
-      int diff = nums[i] / divisor;
-      res = lcm(res, diff);
+  vector<vi> nums(n, vi(3, 0)), dp(n, vi(3, 0));
+  for(int i =0 ; i < n; ++i) {
+    cin >> nums[i][0] >> nums[i][1] >> nums[i][2];
+  }
+  dp[0][0] = nums[0][0]; dp[0][1] = nums[0][1]; dp[0][2] = nums[0][2];
+  int res = max(max(nums[0][0], nums[0][1]), nums[0][2]);
+  for(int i = 1; i < n; ++i) {
+    for (int j = 0; j < 3; ++j) {
+      for (int k = 0; k < 3; ++k) {
+        if (j == k) continue;
+        dp[i][j] = max(dp[i][j], nums[i][j] + dp[i-1][k]);
+        res = max(res, dp[i][j]);
+      }
     }
   }
-
-  cout << res << ln;
+  
+  cout << res << "\n";
 }
 
 int main() {
   flash;
-  int t; cin >> t;
-  rep(_, t) solve();
+  solve();
   return 0;
 }

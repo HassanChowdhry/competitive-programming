@@ -34,3 +34,5 @@
 *.run
 *.bin
 *.vscode
+
+.env

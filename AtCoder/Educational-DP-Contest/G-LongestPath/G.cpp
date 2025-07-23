@@ -21,31 +21,15 @@ int MOD=1000000007;
 
 void solve() {
   int n; cin >> n;
-  vi nums(n, 0); input(nums, n);
-  vi sorted_nums(nums);
-  sort(sorted_nums.begin(), sorted_nums.end());
 
-  int skip = 0;
-  set<int> skip_list;
+  int heads = n / 2;
+  int tails = n - heads;
 
-  for (int i = 0; i < n; ++i) {
-    if (nums[i] == sorted_nums[i]) { ++skip; skip_list.insert(i); }
-  }
-
-  if (skip == n) { cout << "NO" << ln; return; }
-
-  cout << "YES" << ln;
-  cout << (n - skip) << ln;
-  rep(i, n) {
-    if (skip_list.count(i)) continue;
-    cout << nums[i] << " ";
-  }
-  cout << ln;
+  
 }
 
 int main() {
   flash;
-  int t; cin >> t;
-  rep(_, t) solve();
+  solve();
   return 0;
 }

@@ -18,34 +18,32 @@ using namespace std;
 #define vi vector<int>
 #define vl vector<ll>
 int MOD=1000000007;
+bool valid(int x,int y,int n,int m){return x>=0 && x<n && y>=0 && y<m;}
+int powMod(int a,int n){ ll ans=1;for(int i=1;i<=n;i++){ ans=(ans*a)%MOD;}return ans%MOD; }
 
 void solve() {
-  int n; cin >> n;
-  vi nums(n, 0); input(nums, n);
-  vi sorted_nums(nums);
-  sort(sorted_nums.begin(), sorted_nums.end());
+  ll n, w; cin >> n >> w;
 
-  int skip = 0;
-  set<int> skip_list;
+  vector<pair<ll, ll>> nums(n, {0, 0}); // weight, val
+  for (int i = 0; i < n; ++i) cin >> nums[i].fs >> nums[i].sc;
 
-  for (int i = 0; i < n; ++i) {
-    if (nums[i] == sorted_nums[i]) { ++skip; skip_list.insert(i); }
+  vector<vl> dp(n + 1, vl(w + 1, 0));
+
+  for (int i = 1; i <= n; ++i) {
+    for (int j = 1; j <= w; ++j) {
+      if (j - nums[i - 1].fs >= 0) {
+        dp[i][j] = max(dp[i-1][j], dp[i-1][j - nums[i-1].fs] + nums[i-1].sc);
+      } else {
+        dp[i][j] = dp[i-1][j];
+      }
+    }
   }
 
-  if (skip == n) { cout << "NO" << ln; return; }
-
-  cout << "YES" << ln;
-  cout << (n - skip) << ln;
-  rep(i, n) {
-    if (skip_list.count(i)) continue;
-    cout << nums[i] << " ";
-  }
-  cout << ln;
+  cout << dp[n][w];
 }
 
 int main() {
   flash;
-  int t; cin >> t;
-  rep(_, t) solve();
+  solve();
   return 0;
 }
