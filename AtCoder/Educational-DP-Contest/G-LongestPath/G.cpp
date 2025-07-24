@@ -19,13 +19,37 @@ using namespace std;
 #define vl vector<ll>
 int MOD=1000000007;
 
-void solve() {
-  int n; cin >> n;
-
-  int heads = n / 2;
-  int tails = n - heads;
-
+int dfs(int node, vector<vi>& adj, vi& dp, vector<bool>& vis) {
+  if (vis[node]) return dp[node] + 1;
+  int res = 0;
+  for (int child: adj[node]) {
+    if (vis[child]) { res = max(res, dp[child] + 1); continue; }
+    res = max(res, dfs(child, adj, dp, vis) + 1);
+  }
   
+  // cout << res << ln;
+  vis[node] = true;
+  dp[node] = res;
+  return dp[node];
+}
+void solve() {
+  int n, e; cin >> n >> e;
+  vector<vi> adj(n + 1);
+  for (int i = 0; i < e; ++i) {
+    int u, v; cin >> u >> v;
+    adj[u].pb(v);
+  }
+
+  vector<int> dp(n + 1, 0);
+  vector<bool> visit(n + 1, false);
+  
+  // run a dfs through every n and dp[parent] += dp[child]
+
+  for (int i = 1; i <= n; ++i) dfs(i, adj, dp, visit);
+  int res = 0;
+  for (int i = 1; i <= n; ++i) res = max(res, dp[i]);
+  
+  cout << res;
 }
 
 int main() {
