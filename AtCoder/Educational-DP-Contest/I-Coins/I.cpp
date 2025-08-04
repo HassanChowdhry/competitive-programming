@@ -35,6 +35,7 @@ void solve() {
   //for (int i = 1; i <= k; ++i) dp[0][i] = 1.0 - p[0];
   for (int i = 1; i < n; ++i) dp[i][0] = dp[i-1][0] * p[i];
 
+  // we find all probabilities of having exactly k tails
   for (int i = 1; i < n; ++i) {
     for (int j = 1 ; j <= k ; ++j ) {
       dp[i][j] = dp[i-1][j-1] * (1.0 - p[i]) + dp[i-1][j] * p[i];

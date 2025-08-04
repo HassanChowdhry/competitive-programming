@@ -19,48 +19,38 @@ int MOD=1000000007;
 
 void solve() {
   int n; cin >> n;
-  vector<vector<int>> grid(n, vector(n, 0)), dp(n, vector(n, 0));
-  vector<vector<pair<int, int>>> parent(n, vector<pair<int, int>>(n, {0, 0}));
-  char temp;
-  rep(i, n) {
-    rep(j, n) {
-      cin >> temp; grid[i][j] = (temp - 'A');
-    }
-  }
-
-  dp[0][0] = grid[0][0];
-  parent[0][0] = { -1, -1 };
-
-  repx(i, 1, n) {
-    parent[i][0] = { i-1, 0 };
-    parent[0][i] = { 0, i-1 };
-    dp[i][0] = grid[i][0] + dp[i-1][0];
-    dp[0][i] = grid[0][i] + dp[0][i-1];
-  }
-
-  repx(i, 1, n) {
-    repx(j, 1, n) {
-      if (dp[i-1][j] < dp[i][j-1]) {
-        dp[i][j] = grid[i][j] + dp[i-1][j];
-        parent[i][j] = {i-1, j};
-      } else {
-        dp[i][j] = grid[i][j] + dp[i][j-1];
-        parent[i][j] = {i, j-1};
-      }
-
-    }
-  }
-
-  int r = n-1, c = n-1;
+  vector<vector<char>> grid(n, vector<char>(n));
+  vector<vector<int>> vis(n, vector<int>(n, 0));
+  queue<pair<int, int>> q; q.push({0,0});
+  rep(i, n) rep(j, n) cin >> grid[i][j];
   string res = "";
-  while ( r >= 0 && c >= 0 ) {
-    res += (grid[r][c] + 'A');
-    int ti = parent[r][c].fs;
-    int tj = parent[r][c].sc;
-    r = ti;
-    c = tj;
+  while (!q.empty()) {    
+    int len = q.size();
+    char min_char = 'z';
+    queue<pair<int, int>> q2(q);
+    rep(_, len) {
+      auto[x, y] = q2.front(); q2.pop();
+      min_char = min(min_char, grid[x][y]);
+    }
+    
+    res += min_char;
+    rep(_, len) {
+      auto[x, y] = q.front(); q.pop();
+      
+      if (grid[x][y] == min_char) {
+        if (x+1 < n && !vis[x + 1][y]) {
+          vis[x+1][y] = 1;
+          q.push({x+1,y});
+        }
+        if (y+1 < n && !vis[x][y+1]) {
+          vis[x][y+1] = 1;
+          q.push({x,y+1});
+        }
+      }
+    } 
+    
   }
-  reverse(res.begin(), res.end());
+
   cout << res;
 }
 
