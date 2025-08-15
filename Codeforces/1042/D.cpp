@@ -18,34 +18,44 @@ using namespace std;
 #define vi vector<int>
 #define vl vector<ll>
 int MOD=1000000007;
-const ll INF = 1e18L + 5;
 bool valid(int x,int y,int n,int m){return x>=0 && x<n && y>=0 && y<m;}
 int powMod(int a,int n){ ll ans=1;for(int i=1;i<=n;i++){ ans=(ans*a)%MOD;}return ans%MOD; }
 
 void solve() {
-  ll n; cin >> n;
-  vl nums(n, 0); rep(_, n) cin >> nums[_];
-  vector<ll> pre(n+1, 0);
-  for (int i = 1; i <= n; ++i) pre[i] += pre[i-1] + nums[i-1];
-
-  // dp[i][j] = the total of combining i...j into one number, i==j = 0
-  vector<vl> dp(n, vl(n, INF));
-  for (int i =0; i < n; ++i) dp[i][i] = 0;
-
-  for (int i = n-1; i >= 0; --i) {
-    for (int j = i; j < n; ++j) {
-      for (int k = i; k < j; ++k) {
-        dp[i][j] = min(dp[i][j], dp[i][k] + dp[k+1][j] + pre[j+1] - pre[i]);
-      }
-    }
-    
-  }
-  cout << dp[0][n-1];
+  int n; cin >> n;
+  vector<int> cnt(n + 1, 0);
+  vector<vi> adj(n + 1);
   
+  // cout << n << ln;
+
+  rep(_, n-1) {
+    int u, v; cin >> u >> v;
+    adj[u].pb(v); adj[v].pb(u);
+    ++cnt[u]; ++cnt[v];
+  }
+  
+  if (n <= 3) { cout << 0 << ln; return; }
+
+  int leaves = 0;
+  rep(i, n) if (cnt[i+1] == 1) ++leaves;
+
+  // for every possible root
+  int mx_leaves = 0;
+  for (int i = 1; i <= n; ++i) {  
+    // get the one with the max leaves
+    int curr = 0;
+    for (int child: adj[i]) if (cnt[child] == 1) ++curr;
+
+    mx_leaves = max(mx_leaves, curr);
+  }
+
+  cout << leaves - mx_leaves << ln;
 }
 
 int main() {
   flash;
-  solve();
+  int t; cin >> t;
+  rep(i, t)
+    solve();
   return 0;
 }

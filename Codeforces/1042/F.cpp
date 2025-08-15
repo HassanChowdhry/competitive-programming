@@ -18,29 +18,10 @@ using namespace std;
 #define vi vector<int>
 #define vl vector<ll>
 int MOD=1000000007;
-const ll INF = 1e18L + 5;
 bool valid(int x,int y,int n,int m){return x>=0 && x<n && y>=0 && y<m;}
 int powMod(int a,int n){ ll ans=1;for(int i=1;i<=n;i++){ ans=(ans*a)%MOD;}return ans%MOD; }
 
 void solve() {
-  ll n; cin >> n;
-  vl nums(n, 0); rep(_, n) cin >> nums[_];
-  vector<ll> pre(n+1, 0);
-  for (int i = 1; i <= n; ++i) pre[i] += pre[i-1] + nums[i-1];
-
-  // dp[i][j] = the total of combining i...j into one number, i==j = 0
-  vector<vl> dp(n, vl(n, INF));
-  for (int i =0; i < n; ++i) dp[i][i] = 0;
-
-  for (int i = n-1; i >= 0; --i) {
-    for (int j = i; j < n; ++j) {
-      for (int k = i; k < j; ++k) {
-        dp[i][j] = min(dp[i][j], dp[i][k] + dp[k+1][j] + pre[j+1] - pre[i]);
-      }
-    }
-    
-  }
-  cout << dp[0][n-1];
   
 }
 
