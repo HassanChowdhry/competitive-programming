@@ -22,11 +22,24 @@ bool valid(int x,int y,int n,int m){return x>=0 && x<n && y>=0 && y<m;}
 int powMod(int a,int n){ ll ans=1;for(int i=1;i<=n;i++){ ans=(ans*a)%MOD;}return ans%MOD; }
 
 void solve() {
-  // DP WITH BIT MASKING
+  int n; cin >> n;
+  set<int> dup;
+  vi nums(n);
+  rep(i, n) cin >> nums[i];
+  rep(i, n) {
+    int x = nums[i];
+    if (dup.count(x)) { cout << "YES" << ln; return; }
+    dup.insert(x);
+  };
+
+  cout << "NO" << ln;
+
 }
 
 int main() {
   flash;
-  solve();
+  int t; cin >> t;
+  rep(_,t)
+    solve();
   return 0;
 }
