@@ -1,1 +1,1 @@
-# Solutions to CSES Problem Set
+# Competitve Programming Training
