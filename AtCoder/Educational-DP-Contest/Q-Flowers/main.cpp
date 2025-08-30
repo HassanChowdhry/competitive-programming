@@ -55,7 +55,6 @@ class SegmentTree {
     //ll res = 
     //query(2*node, l, m, ql, qr)
     //query(2*node+1, m+1, r, ql, qr);
-    
     return res;
   }
 };

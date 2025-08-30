@@ -21,10 +21,56 @@ int MOD=1000000007;
 bool valid(int x,int y,int n,int m){return x>=0 && x<n && y>=0 && y<m;}
 int powMod(int a,int n){ ll ans=1;for(int i=1;i<=n;i++){ ans=(ans*a)%MOD;}return ans%MOD; }
 
-void solve() {
-  int n; cin >> n;
 
+void matmul(vector<vl>& A, vector<vl>& B) {
+  vector<vl> res(2, vl(2));
+
+  res[0][0] = ((A[0][0] * B[0][0]) + (A[0][1] * B[1][0])) % MOD;
+  res[0][1] = ((A[0][0] * B[0][1]) + (A[0][1] * B[1][1])) % MOD;
+  res[1][0] = ((A[1][0] * B[0][0]) + (A[1][1] * B[1][0])) % MOD;
+  res[1][1] = ((A[1][0] * B[0][1]) + (A[1][1] * B[1][1])) % MOD;
+
+  A=res;
+}
+
+vector<vl> powM(vector<vl> matrix, ll n) {
+  vector<vl> identity = { {1, 0}, {0, 1} }; // identity matrix
+
+  while (n) {
+    // if odd multiply by the identity
+    if ( n % 2 ) matmul(identity, matrix);
+    
+    matmul(matrix, matrix);
+    n /= 2;
+  }
+
+  return identity;
+}
+
+
+void solve() {
+  ll n; cin >> n;
+  if (n == 0 || n == 1) { cout << n; return; }
   // matrix fib: https://cp-algorithms.com/algebra/fibonacci-numbers.html
+  // this is the matrix you need to multiply 
+  /* 
+    {fn, fn-1} * {1, 1}^n  =  {fn+1, fn}
+    {0, 0}       {1, 0}     {0, 0}
+    this matrix is the transition to proceed to the nth fib number. in problems like this you have to figure out the matrix
+    this is specific to fib only 
+  */
+  vector<vl> matrix = { 
+    { 1, 1 }, 
+    { 1, 0 } 
+  };
+  vector<vl> M = powM(matrix, n-1);
+  // vector<vl> fib = { 
+  //   { 1, 0 }, 
+  //   { 0, 0 } 
+  // };
+  
+  // matmul(fib, M);
+  cout << M[0][0] % MOD << ln;
 }
 
 int main() {
