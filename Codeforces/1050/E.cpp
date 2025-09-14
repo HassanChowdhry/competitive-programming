@@ -22,13 +22,35 @@ bool valid(int x,int y,int n,int m){return x>=0 && x<n && y>=0 && y<m;}
 int powMod(int a,int n){ ll ans=1;for(int i=1;i<=n;i++){ ans=(ans*a)%MOD;}return ans%MOD; }
 
 void solve() {
+  int n, k; cin >> n >> k;
+  vi a(n), cnt(n + 1, 0); rep(i, n) { int x; cin >> x; a[i]=x; ++cnt[x];  }
 
+  for (int j = 1; j <= n; ++j) if (cnt[j] % k) { cout << 0 << ln; return; }
+
+  vi mx(n + 1);
+  for (int j = 1; j <= n; ++j) mx[j] = (cnt[j] / k);
+
+  ll res = 0;
+  vi curr(n + 1, 0);
+  int l = 0, r = 0;
+  while (r < n) {
+    ++curr[a[r]];
+    while (l < r && curr[a[r]] > mx[a[r]]) {
+      --curr[a[l]];
+      ++l;
+    }
+
+    res += (r - l + 1);
+    ++r;
+  }
+
+  cout << res << ln;
 }
 
 int main() {
   flash;
-  // int t; cin >> t;
-  // rep(i, t) 
+  int t; cin >> t;
+  rep(i, t) 
   solve();
   return 0;
 }

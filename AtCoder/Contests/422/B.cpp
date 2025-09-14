@@ -22,13 +22,29 @@ bool valid(int x,int y,int n,int m){return x>=0 && x<n && y>=0 && y<m;}
 int powMod(int a,int n){ ll ans=1;for(int i=1;i<=n;i++){ ans=(ans*a)%MOD;}return ans%MOD; }
 
 void solve() {
+  int n, m; cin >> n >> m;
+  vector<vector<char>> grid(n, vector<char>(m));
+  for(int i=0; i < n; ++i) for (int j =0; j < m; ++j) cin >> grid[i][j];
 
+  for (int i =0; i < n; ++i) {
+    for (int j = 0; j < m; ++j) {
+      if (grid[i][j] == '.') continue;
+      int cnt = 0;
+
+      if (i > 0) cnt += (grid[i-1][j] == '#');
+      if (i < n-1) cnt += (grid[i+1][j] == '#');
+      if (j > 0) cnt += (grid[i][j-1] == '#');
+      if (j < m-1) cnt += (grid[i][j+1] == '#');
+      // cout << i << " " << j << " " << cnt << " " << (cnt == 2) << " " << ln;
+      if (cnt != 2 && cnt != 4) { cout << "No"; return; }
+    }
+  }
+
+  cout << "Yes";
 }
 
 int main() {
   flash;
-  // int t; cin >> t;
-  // rep(i, t) 
   solve();
   return 0;
 }

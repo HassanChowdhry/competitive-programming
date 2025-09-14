@@ -22,13 +22,35 @@ bool valid(int x,int y,int n,int m){return x>=0 && x<n && y>=0 && y<m;}
 int powMod(int a,int n){ ll ans=1;for(int i=1;i<=n;i++){ ans=(ans*a)%MOD;}return ans%MOD; }
 
 void solve() {
-
+  ll n; cin >> n;
+  vi a(n); rep(i, n) { cin >> a[i]; };
+  vi odd;
+  ll even = 0;
+  for (int i = 0; i < n; ++i) {
+    if (a[i] % 2 == 0) even += a[i];
+    else { odd.pb(a[i]); }
+  } 
+  
+  if (odd.size() == 0) { cout << 0 << ln; return; }
+  if (odd.size() == 1) { cout << (even + odd[0]) << ln; return; }
+  sort(odd.begin(), odd.end());
+  
+  ll k = (odd.size() + 1) / 2;
+  ll res = 0; 
+  ll i = odd.size() - 1;
+  while (k > 0) {
+    res += odd[i];
+    --k; --i;
+  }
+  
+  cout << (res + even) << ln;
+  
 }
 
 int main() {
   flash;
-  // int t; cin >> t;
-  // rep(i, t) 
+  int t; cin >> t;
+  rep(i, t) 
   solve();
   return 0;
 }

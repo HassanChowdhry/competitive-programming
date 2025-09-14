@@ -1,0 +1,13 @@
+{
+  "name": "running-sum-js",
+  "version": "1.0.0",
+  "description": "Running sum calculation in JavaScript",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js",
+    "test": "./test.sh"
+  },
+  "keywords": ["algorithm", "running-sum"],
+  "author": "",
+  "license": "MIT"
+}

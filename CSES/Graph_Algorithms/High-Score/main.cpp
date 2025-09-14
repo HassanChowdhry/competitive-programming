@@ -16,35 +16,46 @@ using namespace std;
 #define rem(mp, el) if(mp[el]==0)mp.erase(el)
 #define ln "\n"
 
+void dfs(int u, vector<vector<int>>& edges, vector<int>& vis) {
+  if (vis[u]) return;
+  vis[u]=1;
+  for (int v: edges[u]) if (!vis[v]) dfs(v, edges, vis);
+}
 void solve() {
   int n, k; cin >> n >> k;
   vector<ll> dist(n+1, LLONG_MIN);
-  vector<vector<ll>> edges(k, vector<ll>(3, 0)); // start, end, cost
+  vector<vector<int>> edges(k, vector<int>(3)); // start, end, cost
+  vector<vector<int>> adj(n + 1), radj(n + 1);
+  vector<int> vis1(n + 1),vis2(n + 1);
   int u, v, c;
   rep(i, k) {
     cin >> u >> v >> c;
     edges[i][0] = u;
     edges[i][1] = v;
-    edges[i][2] = -c;
+    edges[i][2] = c;
+
+    adj[u].pb(v);
+    radj[v].pb(u);
   }
-
-  bool improv = true;
-  for (int i = 0; i < n && improv; ++i) {
-    improv = true;
-    for (vector<ll> edge: edges) {
+  dfs(1, adj, vis1);
+  dfs(n, radj, vis2);
+  // way to check a cycle in BL we run till n-1 iteration, 
+  // on nth iteration we run again and see if we have improvement and we can reach both v from 1 and n. 
+  dist[1] = 0;
+  bool improve = true;
+  for (int i = 0; i < n && improve; ++i) {
+    improve = false;
+    for (vector<int> edge: edges) {
       u = edge[0], v = edge[1], c = edge[2];
-
-      if (dist[u] + c < dist[v]) {
+      if (dist[u] == LLONG_MIN) continue;
+      if (dist[u] + c > dist[v]) {
+        improve = true;
         dist[v] = dist[u] + c;
-        improv = true;
-
-        if (i == n-1) {
-          cout << -1; return;
-        }
+        if (i == n-1 && vis1[v] && vis2[v]) { cout << -1; return; }
       }
     }
   }
-
+  if (dist[n] == LLONG_MIN) { cout << -1; return; }
   cout << dist[n];
 
 }

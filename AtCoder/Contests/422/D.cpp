@@ -17,31 +17,34 @@ using namespace std;
 #define ln "\n"
 #define vi vector<int>
 #define vl vector<ll>
-#define vll vector<vl>
 int MOD=1000000007;
+bool valid(int x,int y,int n,int m){return x>=0 && x<n && y>=0 && y<m;}
+int powMod(int a,int n){ ll ans=1;for(int i=1;i<=n;i++){ ans=(ans*a)%MOD;}return ans%MOD; }
 
-void getdepth(int node, int d, vl& depth, vll& adj) {
-  depth[node] = d;
-  for (int child: adj[node]) getdepth(child, d + 1, depth, adj);
+vector<ll> get(ll n, ll k) {
+  if (n == 0) return {k};
+
+  ll l = k / 2;
+  ll r = ceil(k/2.0);
+
+  vector<ll> left = get(n-1, l);
+  vector<ll> right = get(n-1, r);
+  vector<ll> res;
+  for(ll c: left) res.pb(c);
+  for(ll c: right) res.pb(c);
+  return res;
+
 }
-
 void solve() {
-  int n, q; cin >> n >> q;
-  int LOG = 20;
-  vector<ll> parent(n + 1, 0);
-  repx(i, 2, n + 1) cin >> parent[i];
-  vll dp(n + 1, vl(LOG, 0));
-  vll adj(n + 1); vl depth(n + 1);
+  ll n, k; cin >> n >> k;
+  ll len = (1LL << n);
+  ll u = (k % len == 0 ? 0: 1);
 
-  repx(i, 2, n + 1) adj[parent[i]].pb(i);
-  getdepth(1, 0, depth, adj);
+  cout << u << ln;
+  
+  vector<ll> res = get(n, k);
 
-  repx(i, 1, n + 1) dp[i][0] = parent[i];
-  repx(p, 1, LOG) {
-    repx(i, 1, n + 1) dp[i][p] = dp[ dp[i][p-1] ][p-1];
-  }
-  
-  
+  for (ll c:res) cout << c << " ";
 }
 
 int main() {
