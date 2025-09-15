@@ -21,16 +21,7 @@ int MOD=1000000007;
 bool valid(int x,int y,int n,int m){return x>=0 && x<n && y>=0 && y<m;}
 int powMod(int a,int n){ ll ans=1;for(int i=1;i<=n;i++){ ans=(ans*a)%MOD;}return ans%MOD; }
 
-void solve() {
-  int n, k; cin >> n;
-  vector<vi> a(n); int len = 0;
-  for (int i = 0; i < n; ++i) {
-    cin >> k;
-    a[i].resize(k);
-    for (int j = 0; j < k; ++j) { cin >> a[i][j]; }
-    len = max(len, k);
-  }
-}
+void solve() {}
 
 int main() {
   flash;
