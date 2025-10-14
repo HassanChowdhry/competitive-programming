@@ -1,76 +1,98 @@
 #include <bits/stdc++.h>
 using namespace std;
-
 #define ll long long
 #define pb push_back
-#define fs first 
-#define sc second 
-#define all(a) a.begin(),a.end()
-#define mod(num, n) (num % n + n) % n
-#define flash ios_base::sync_with_stdio(false);cin.tie(NULL)
-#define test int t;cin>>t;while(t--)
-#define rep(i,n) for(int i=0;i<n;++i)
-#define repx(i,x,n) for(int i=x;i<n;++i)
-#define per(i,n) for(int i=n-1;i>=0;--i)
-#define input(arr,n);for(int i=0;i<n;++i)cin>>arr[i]
-#define rem(mp, el) if(mp[el]==0)mp.erase(el)
 #define ln "\n"
-#define vi vector<int>
-#define vl vector<ll>
-#define vll vector<vl>
-int MOD=1000000007;
-
-void getdepth(int node, int d, vl& depth, vll& adj) {
-  depth[node] = d;
-  for (int child: adj[node]) getdepth(child, d + 1, depth, adj);
+void LSH() {
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
 }
 
-void solve() {
-  int n, q; cin >> n >> q;
-  int LOG = 20;
-  vector<ll> parent(n + 1, 0);
-  int p1, p2;
-  // repx(i, 1, n) {
-  //   cin >> p1 >> p2;
-  //   if (p1 > p2) swap(p1, p2);
-  //   parent[p2] = p1;
-  // };
-  vll dp(n + 1, vl(LOG, 0));
-  vll adj(n + 1); vl depth(n + 1);
+int LOG = 32;
 
-  repx(i, 2, n + 1) adj[parent[i]].pb(i);
-  getdepth(1, 0, depth, adj);
+void getdepth(int node, ll d, vector<ll>& depth, vector<vector<ll>>& adj) {
+  depth[node] = d;
+  for (int child: adj[node]) getdepth(child, d + 1LL, depth, adj);
+}
 
-  repx(i, 1, n + 1) dp[i][0] = parent[i];
-  repx(p, 1, LOG) {
-    repx(i, 1, n + 1) dp[i][p] = dp[ dp[i][p-1] ][p-1];
-  }
-  
-  // find LCA in this undirected tree. then check distance of original to lca
-  int a, b, k, pa, pbb, px;
-  rep(_, q) {
-    cin >> a >> b;
-    pa = a, pbb = b;
-    if (depth[a] > depth[b]) swap(a, b);
-    k = depth[b] - depth[a];
-    rep(i, LOG) {
-      if (k & ( 1 << i )) b = dp[b][i];
+void dfs(int node, int p, vector<ll>& parent, vector<vector<ll>>& ad) {
+    parent[node] = p;
+    for (int c: ad[node]) {
+        if (c != p) dfs(c, node, parent, ad);
     }
-    if (a == b) { cout << depth[pa] - depth[a] + depth[pbb] - depth[b] << ln; continue; }
+}
+void solve() {
+    int n, q; cin >> n >> q;
+    vector<ll> parent(n + 1, 0);
+    vector<vector<ll>> ad(n + 1);
+    for (int i = 0; i <= n; ++i) parent[i]=i;
+    for (int i = 0; i < n-1; ++i) { 
+        int p, c; cin >> p >> c;
+        ad[p].pb(c);
+        ad[c].pb(p);
+    }
 
-    for (int log = 20; log >= 0; --log) {
-      if (log >= depth[a]) continue;
-      if (dp[a][log] != dp[b][log])
-        { a = dp[a][log]; b = dp[b][log]; }
+    dfs(1, 1, parent, ad);
+
+    int root = 0;
+    for (int i = 0; i <= n; ++i) if (parent[i] == i) root = i;
+
+    // cout << "root: " << root << ln;
+    vector<vector<ll>> dp(n + 1, vector<ll>(LOG));
+    vector<ll> depth(n + 1);
+    vector<vector<ll>> adj(n + 1);
+
+    for (int i = 1; i <= n; ++i) {
+        if (parent[i] == i) continue;
+        adj[parent[i]].pb(i);
+    }
+
+    getdepth(root, 0, depth, adj);
+
+    for (int i = 1; i <= n; ++i) dp[i][0] = parent[i];
+    for (int p = 1; p < LOG; ++p) {
+        for (int i = 1; i <= n; ++i) dp[i][p] = dp[ dp[i][p-1] ][p-1];
     }
     
-    px = dp[a][0];
-    cout << depth[pa] - depth[px] + depth[pbb] - depth[px] << ln;
-  }
+    for (int i=1; i <= q; ++i) {
+        int a, b; cin >> a >> b;
+        ll da = depth[a], db = depth[b];
+        if (depth[a] > depth[b]) swap(a, b);
+        ll k = depth[b] - depth[a];
+
+        for (int i = 0; i < LOG; ++i) {
+            if (k & ( 1 << i )) b = dp[b][i];
+        }
+        
+        //LCA
+        if (a == b) { 
+            // cout << "LCA: " << a << ln; 
+            // cout << "a: " << da << " b: " << db << " LCA: " << depth[a] << ln;
+            ll res = abs(da - depth[a]) + abs(db - depth[a]);
+            cout << res << ln;
+            continue; 
+        }
+
+        for (int log = 31; log >= 0; --log) {
+        if (log >= depth[a]) continue;
+        if (dp[a][log] != dp[b][log])
+            { a = dp[a][log]; b = dp[b][log]; }
+        }
+        // LCA
+        // cout << "LCA: " << dp[a][0] << ln;
+        ll lca = dp[a][0];
+        ll res = abs(da - depth[lca]) + abs(db - depth[lca]);
+        // cout << "a: " << da << " b: " << db << " LCA: " << depth[dp[a][0]] << ln;
+        cout << res << ln;
+        // if (res > 3) yes = 0;
+    }
+    // cout << yes << ln;
 }
 
 int main() {
-  flash;
-  solve();
-  return 0;
+    LSH();
+    // int t; cin >> t;
+    // for(int i = 0; i < t; ++i)
+    solve();
 }
