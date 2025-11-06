@@ -7,7 +7,7 @@ using namespace std;
 #define sc second 
 #define all(a) a.begin(),a.end()
 #define mod(num, n) (num % n + n) % n
-#define flash ios_base::sync_with_stdio(false);cin.tie(NULL)
+#define flash ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
 #define test int t;cin>>t;while(t--)
 #define rep(i,n) for(int i=0;i<n;++i)
 #define repx(i,x,n) for(int i=x;i<n;++i)

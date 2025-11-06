@@ -7,7 +7,7 @@ using namespace std;
 #define sc second 
 #define all(a) a.begin(),a.end()
 #define mod(num, n) (num % n + n) % n
-#define flash ios_base::sync_with_stdio(false);cin.tie(NULL)
+#define flash ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
 #define test int t;cin>>t;while(t--)
 #define rep(i,n) for(int i=0;i<n;++i)
 #define repx(i,x,n) for(int i=x;i<n;++i)
@@ -18,15 +18,15 @@ using namespace std;
 #define vi vector<int>
 #define vl vector<ll>
 int MOD=1000000007;
-bool valid(int x,int y,int n,int m){return x>=0 && x<n && y>=0 && y<m;}
-int powMod(int a,int n){ ll ans=1;for(int i=1;i<=n;i++){ ans=(ans*a)%MOD;}return ans%MOD; }
 
-const int MAXN = 100005;
-vector<int> top;
-vector<vi> adj(MAXN), radj(MAXN), scc(MAXN);
-vector<int> value(MAXN), coins(MAXN);
-int vis[MAXN];
-int vis2[MAXN];
+const ll MAXN = 100005;
+vector<ll> top;
+vector<vl> adj(MAXN), radj(MAXN), scc(MAXN);
+vector<ll> value(MAXN), coins(MAXN);
+map<ll, ll> ccs;
+map<ll, set<ll>> sccadj;
+vector<ll> dp(MAXN);
+ll vis[MAXN], vis2[MAXN], vis3[MAXN];
 
 void dfs(int u) {
   vis[u] = 1;
@@ -34,12 +34,23 @@ void dfs(int u) {
   top.pb(u);
 }
 
-int dfs2(int u, int group) {
-  int money = 0;
-  for (int v: radj[u]) if (!vis2[v]) { money += coins[v]; dfs2(v, group); };
+ll dfs2(int u, int group) {
+  ll money = coins[u];
   vis2[u] = 1;
+  for (ll v: radj[u]) if (!vis2[v]) { money += dfs2(v, group); };
   scc[group].pb(u);
   return money;
+}
+
+ll dfs3(int u) {
+  if (dp[u]) return dp[u];
+  ll res = value[u];
+  ll curr = 0;
+  for (ll v: sccadj[u]) {
+    curr = max(curr, dfs3(v));
+  }
+  
+  return dp[u] = (res + curr);
 }
 
 void solve() {
@@ -47,9 +58,9 @@ void solve() {
   fill(vis, vis + MAXN, 0);
   fill(vis2, vis2 + MAXN, 0);
 
-  for(int i=1; i <= n; ++i) cin >> coins[i];
-  int u, v;
-  for (int i = 0; i < m; ++i) {
+  for (ll i=1; i <= n; ++i) cin >> coins[i];
+  ll u, v;
+  for (ll i = 0; i < m; ++i) {
     cin >> u >> v;
     adj[u].pb(v);
     radj[v].pb(u);
@@ -57,25 +68,47 @@ void solve() {
   
   // SCC to make a DAG
   // toposort
-  for (int i = 1; i <= n; ++i) if (!vis[i]) dfs(i);
+  for (ll i = 1; i <= n; ++i) if (!vis[i]) dfs(i);
 
   // scc -- reverse the toposort
   int group = 1;
-  for (int i = n; i > 0; --i) {
-    if (!vis2[i]) { 
-      int money = dfs2(i, group); 
+  for (int i = n-1; i >= 0; --i) {
+    if (!vis2[top[i]]) { 
+      ll money = dfs2(top[i], group); 
       value[group] = money;
       ++group; 
     }
   }
 
+  for (int i = 1; i < group; ++i) {
+    for (int num: scc[i]) {
+      ccs[num] = i;
+    }
+  }
+
   // transform adj list to SCC adj
+  for (int i = 1; i <= n; ++i) {
+    for (int num: adj[i]) {
+      if (ccs[i] == ccs[num]) continue;
+      sccadj[ccs[i]].insert(ccs[num]);
+      vis3[ccs[num]] = 1;
+    }
+  }
+
+  vector<ll> root;
+  for (int i = 1; i < group; ++i) {
+    if (!vis3[i]) root.pb(i);
+  }
+  
+  ll res = -1;
+  for (int num: root) {
+    res = max(res, dfs3(num));
+  }
+  cout << res;
 }
 
 int main() {
   flash;
-  // int t; cin >> t;
-  // rep(i, t) 
   solve();
   return 0;
 }
