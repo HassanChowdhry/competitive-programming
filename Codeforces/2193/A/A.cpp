@@ -21,12 +21,23 @@ int MOD=1000000007;
 bool valid(int x,int y,int n,int m){return x>=0 && x<n && y>=0 && y<m;}
 int powMod(int a,int n){ ll ans=1;for(int i=1;i<=n;i++){ ans=(ans*a)%MOD;}return ans%MOD; }
 
-void solve() {}
+void solve() {
+  int n,s,x,y; cin >> n >> s >> x;
+  int s2 = 0;
+
+  for (int i = 0; i < n; ++i) {
+    cin >> y; s2 += y;
+  }
+
+  int calc = s - s2;
+  if (calc >= 0 && calc % x == 0) cout << "YES" << ln;
+  else cout << "NO"<< ln;
+} 
 
 int main() {
   flash;
-  // int t; cin >> t;
-  // rep(i, t) 
+  int t; cin >> t;
+  rep(i, t) 
   solve();
   return 0;
 }
