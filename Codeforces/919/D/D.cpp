@@ -5,6 +5,14 @@ void solve() {
   int n, m, u, v; cin >> n >> m;
   string s; cin >> s; s = " " + s;
 
+  // cycle = -1
+  // we can think of something like toposort
+  // leaf will always have the answer
+  // dp[i][j] = count of char j at node i
+  // i = graph node, j = char
+  // dp[i] = dp[r_adj[i]]
+  // dp[i][node[i]]++
+
   vector<vector<int>> adj(n + 1);
   vector<int> vis(n + 1);
 
