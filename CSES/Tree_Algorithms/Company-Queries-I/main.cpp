@@ -41,6 +41,15 @@ void solve() {
     repx(i, 1, n + 1) dp[i][p] = dp[ dp[i][p-1] ][p-1];
   }
   
+  int node, k;
+  rep(_, q) {
+    cin >> node >> k;
+    if (depth[node] < k) { cout << -1 << ln; continue; }
+    rep(i, LOG) {
+      if (k & ( 1 << i )) node = dp[node][i];
+    }
+    cout << node << ln;
+  }
   
 }
 
