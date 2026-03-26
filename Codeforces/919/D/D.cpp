@@ -4,7 +4,7 @@ using namespace std;
 void solve() {
   int n, m, u, v; cin >> n >> m;
   string s; cin >> s; s = " " + s;
-
+  
   // cycle = -1
   // we can think of something like toposort
   // leaf will always have the answer
