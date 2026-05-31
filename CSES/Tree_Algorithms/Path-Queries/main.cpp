@@ -13,12 +13,12 @@ class SegmentTree {
     n = m; tree.resize(4 * m);
   }
 
-  void update(ll node, ll pos, ll l, ll r, ll val) {
+  void update(ll node, ll l, ll r, ll pos, ll val) {
     if (l == r) { tree[node] = val; return; }
 
     ll m = (l + r) / 2;
-    if (pos <= m) update(2*node, pos, l, m, val);
-    else if (pos > m) update(2*node+1, pos, m+1, r, val);
+    if (pos <= m) update(2*node, l, m, pos, val);
+    else if (pos > m) update(2*node+1, m+1, r, pos, val);
     
     // min, max
     // tree[node] = max(tree[2 * node], tree[2 * node + 1]); 
@@ -28,7 +28,7 @@ class SegmentTree {
   }
 
   ll query(ll node, ll l, ll r, ll ql, ll qr) {
-    if (qr < l || ql > r) return 0;
+    if (qr < l || ql > r) return 0LL;
     if (ql<=l && qr>=r) return tree[node];
     ll m = (l + r) / 2;
 
@@ -45,18 +45,20 @@ class SegmentTree {
   }
 };
 
+
 void solve() {
   int n, q; cin >> n >> q;
+  vector<vector<int>> adj(n + 1);
+  vector<ll> a(n+1), s(n + 1), e(n + 1);
 
-  vector<int> a(n + 1), s(n + 1), e(n + 1);
-  vector<vector<int>> adj(n + 1); 
-  for (int i = 1; i <= n; ++i) cin >> a[i];
+  for (int i = 1; i <= n; ++i) {
+    cin >> a[i];
+  }
 
-  for (int i = 1; i < n; ++i) {
-    int u, v;
-    cin >> u >> v;
-    adj[u].push_back(v);
-    adj[v].push_back(u);
+  for (int i = 0; i < n - 1; ++i) {
+    int a, b; cin >> a >> b;
+    adj[a].push_back(b);
+    adj[b].push_back(a);
   }
 
   auto dfs = [&](int u, int p, int id, auto&& dfs) -> int {
@@ -71,29 +73,35 @@ void solve() {
   };
 
   dfs(1, 0, 1, dfs);
-  vector<int> v(n + 1);
-  SegmentTree st(n + 1);
-  
+  SegmentTree st(n + 2);
+
   for (int i = 1; i <= n; ++i) {
-    v[s[i]] = a[i];
-    st.update(1, s[i], 1, n, a[i]);
-    // cout << "for " << i << ", s : " << s[i] << " end: " << e[i] << "\n";
-    // cout << " val " << st.query(1, 1, n, s[i], s[i]) << "\n";
+    ll p1 = st.query(1, 1, n + 1, s[i], s[i]);
+    ll p2 = st.query(1, 1, n + 1, e[i] + 1, e[i] + 1);
+
+    st.update(1, 1, n + 1, s[i],  p1 + a[i]);
+    st.update(1, 1, n + 1, e[i] + 1, p2 - a[i]);
   }
 
-  // cout << " 1 to 5" << " " << st.query(1, 1, n, 1, 6) << " \n ";
+  for (int i = 0; i < q; ++i) {
+    int f; cin >> f;
 
-  while (q--) {
-    int m; cin >> m;
-    if (m == 1) {
-      int y, x; cin >> y >> x;
-      st.update(1, s[y], 1, n, x);
+    if (f == 1) {
+      ll p, v; cin >> p >> v;
+      ll p1 = st.query(1, 1, n + 1, s[p], s[p]);
+      ll p2 = st.query(1, 1, n + 1, e[p] + 1, e[p] + 1);
+
+      st.update(1, 1, n + 1, s[p], p1 - a[p] +  v);
+      st.update(1, 1, n + 1, e[p] + 1,  p2 - v + a[p]);
+
+      a[p] = v;
     } else {
       int x; cin >> x;
-      long long res = st.query(1, 1, n, s[x], e[x]);
+      ll res = st.query(1, 1, n + 1, s[1], s[x]);
       cout << res << "\n";
     }
   }
+
 }
 
 int main() {
