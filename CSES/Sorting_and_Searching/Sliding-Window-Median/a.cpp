@@ -1,45 +1,44 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-#define ll long long
 #define ln "\n";
 
 class SegmentTree {
     private:
-    vector<ll> tree;
-    ll n;
+    vector<int> tree;
+    int n;
 
     public:
-    SegmentTree(ll m) {
+    SegmentTree(int m) {
         n = m; tree.resize(4 * m);
     }
 
-    void update(ll node, ll l, ll r, ll pos,  ll val) {
+    void update(int node, int l, int r, int pos,  int val) {
         if (l == r) { tree[node] = val; return; }
 
-        ll m = (l + r) / 2;
+        int m = (l + r) / 2;
         if (pos <= m) update(2*node, l, m, pos, val);
         else if (pos > m) update(2*node+1, m+1, r, pos, val);
 
         tree[node] = tree[2*node] + tree[2*node+1];
     }
 
-    ll query(ll node, ll l, ll r, ll ql, ll qr) {
+    int query(int node, int l, int r, int ql, int qr) {
         if (qr < l || ql > r) return 0;
         if (ql<=l && qr>=r) return tree[node];
-        ll m = (l + r) / 2;
+        int m = (l + r) / 2;
 
-        ll res = query(2*node, l, m, ql, qr) + query(2*node+1, m+1, r, ql, qr);
+        int res = query(2*node, l, m, ql, qr) + query(2*node+1, m+1, r, ql, qr);
 
         return res;
     }
 
-    ll get_median(ll node, ll l, ll r, ll h) {
+    int get_median(int node, int l, int r, int h) {
         if (l >= r || h == 0) return l;
         
-        ll m = (l + r) / 2;
-        ll ml = tree[node * 2];
-        ll mr = tree[node * 2 + 1];
+        int m = (l + r) / 2;
+        int ml = tree[node * 2];
+        int mr = tree[node * 2 + 1];
 
         if (h <= ml) {
             return get_median(node * 2, l, m, h);
@@ -51,9 +50,9 @@ class SegmentTree {
 
 void solve() {
     int n, k; cin >> n >> k;
-    vector<ll> nums(n + 1), sort_nums(n + 1), a(n + 1);
-    unordered_map<ll, ll> mp, r_mp;
-    SegmentTree st(n + 1), st2(n + 1);
+    vector<int> nums(n + 1), sort_nums(n + 1), a(n + 1);
+    map<int, int> mp, r_mp;
+    SegmentTree st(n + 1);
 
     for (int i = 1; i <= n; ++i) {
         cin >> nums[i];
@@ -80,41 +79,23 @@ void solve() {
     // st.update(1, 1, n, a[i], p - 1);
     int r = 1, l = 1;
     for (r = 1; r < k; ++r) {        
-        ll p = st.query(1, 1, n, a[r], a[r]);
+        int p = st.query(1, 1, n, a[r], a[r]);
         st.update(1, 1, n, a[r], p + 1);
-
-        ll x = st2.query(1, 1, n, a[r], a[r]);
-        st2.update(1, 1, n, a[r], x + r_mp[a[r]]);
     }
     
-    ll h = (k + 1) / 2;
-    ll p, x;
+    int h = (k + 1) / 2;
+    int p;
     for (; r <= n;) {
         p = st.query(1, 1, n, a[r], a[r]);
         st.update(1, 1, n, a[r], p + 1);
-
-        x = st2.query(1, 1, n, a[r], a[r]);
-        st2.update(1, 1, n, a[r], x + r_mp[a[r]]);
         ++r;
 
-        ll median = st.get_median(1, 1, n, h);
-        ll m = r_mp[median];
-
-        ll ls = st2.query(1, 1, n, 1, median);
-        ll lc = st.query(1, 1, n, 1, median);
-
-        ll rs = st2.query(1, 1, n, median + 1LL, n);
-        ll rc = st.query(1, 1, n, median + 1LL, n);
-
-        ll ans = ((m * lc) - ls) + (rs - (m * rc));
-
+        int res = st.get_median(1, 1, n, h);
+        int ans = r_mp[res];
         cout << ans << " ";
 
         p = st.query(1, 1, n, a[l], a[l]);
         st.update(1, 1, n, a[l], p - 1);
-
-        x = st2.query(1, 1, n, a[l], a[l]);
-        st2.update(1, 1, n, a[l], x - r_mp[a[l]]);
         ++l;
     }   
 }
