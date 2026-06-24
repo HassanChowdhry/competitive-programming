@@ -91,14 +91,9 @@ void solve() {
   st.build(a, 1, 1, n);
 
   for (int i = 0; i < q; ++i) {
-    int f, l, r; cin >> f >> l >> r;
-
-    if (f == 1) {
-      st.update(1, l, 1, n, r);
-    } else {
-      node res = st.query(1, 1, n, l, r);
-      cout << res.pre << "\n";
-    }
+    int l, r; cin >> l >> r;
+    node res = st.query(1, 1, n, l, r);
+    cout << res.ans << "\n";
   }
 
   // cout << st.query(1, 1, n, 1, 1);
