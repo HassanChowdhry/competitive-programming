@@ -35,8 +35,10 @@ class SegmentTree {
       
       if (start >= l && end <= r) {
         tree[node] += (end - start + 1) * value;
-        if (start != end) 
-          { lazy[node * 2 + 1] += value; lazy[node * 2 + 2] += value; }
+        if (start != end) { 
+          lazy[node * 2 + 1] += value; 
+          lazy[node * 2 + 2] += value; 
+        }
         return;
       }
       int mid = (start + end) / 2;
