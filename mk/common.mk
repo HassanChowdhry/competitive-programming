@@ -55,7 +55,7 @@ run: build ## Compile, then run with stdin/stdout attached to your terminal
 test: build ## Compile, run main.inp -> main.out, then print main.out
 	cd "$(ABS)" && ./$(BIN) < $(INP) > $(OUTF)
 	@echo "--- $(ABS)/$(OUTF) ---"
-	@cat "$(ABS)/$(OUTF)"
+# 	@cat "$(ABS)/$(OUTF)"
 
 edit: ## Open main.cpp/main.inp/main.out in VS Code
 	@test -n "$(ABS)" || { echo "No problem resolved. Pass P=<path>, or cd into a problem dir."; exit 1; }
