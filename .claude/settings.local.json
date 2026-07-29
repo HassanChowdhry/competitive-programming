@@ -1,8 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(xargs -I{} basename \"{}\")",
-      "Bash(awk '/cses-cpp|^co\\\\\\(\\\\\\)|^run\\\\\\(\\\\\\)|^test\\\\\\(\\\\\\)|template\\\\.cpp|function.*cf|function.*cses/' ~/.zshrc)"
-    ]
-  }
-}
