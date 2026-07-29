@@ -1,5 +1,12 @@
+# Compiled binaries with no extension (e.g. `g++ main.cpp -o main` -> `main`)
+*
+!*/
+!*.*
+
 # Prerequisites
 *.d
+*.inp
+*.in
 
 # Compiled Object files
 *.slo
