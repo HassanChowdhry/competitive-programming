@@ -3,7 +3,7 @@
 #define MOD 1000000007
 using namespace std;
 
-int main() {
+void solve() {
   int target;
   cin >> target;
   vector <int> dp(target+1, 0);
@@ -18,5 +18,12 @@ int main() {
     }
   }
   
-  cout << dp[target];
+  cout << dp[target] << '\n';
+}
+
+int main() {
+  int t; cin >> t;
+  while (t--) solve();
+
+  return 0;
 }
