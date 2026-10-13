@@ -1,84 +1,66 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-#define ll long long
-#define pb push_back
-#define fs first 
-#define sc second 
-#define all(a) a.begin(),a.end()
-#define mod(num, n) (num % n + n) % n
-#define flash ios_base::sync_with_stdio(false);cin.tie(NULL)
-#define test int t;cin>>t;while(t--)
-#define rep(i,n) for(int i=0;i<n;++i)
-#define repx(i,x,n) for(int i=x;i<n;++i)
-#define per(i,n) for(int i=n-1;i>=0;--i)
-#define input(arr,n);for(int i=0;i<n;++i)cin>>arr[i]
-#define rem(mp, el) if(mp[el]==0)mp.erase(el)
-#define ln "\n"
-int MOD=1000000007;
+const int N = 2e5;
+int tree[4 * (N+1)];
 
-class SegmentTree {
-	private:
-		vector<ll> tree;
-		int n;
-	
-		void buildTree(vector<ll>& nums, int left, int right, int index) {
-			if (left == right) 
-				{ tree[index] = nums[left]; return; }
-			int mid = left + (right - left) / 2;
-			buildTree(nums, left, mid, 2 * index + 1);
-			buildTree(nums, mid + 1, right, 2 * index + 2);
-			tree[index] = tree[2 * index + 1] + tree[2 * index + 2];
-		}
-	
-		ll query_sum(int left, int right, int index, int qleft, int qright) {
-			if (qright < left || qleft > right) return 0;
-			if (qleft <= left && right <= qright) return tree[index];
-			int mid = left + (right - left) / 2;
-			return query_sum(left, mid, 2 * index + 1, qleft, qright) +
-				query_sum(mid + 1, right, 2 * index + 2, qleft, qright);
-		}
-	
-		void update(int left, int right, int index, int pos, ll val) {
-			if (left == right) 
-				{ tree[index] = val; return; }
-			int mid = left + (right - left) / 2;
-			if (pos <= mid) update(left, mid, 2 * index + 1, pos, val);
-			else update(mid + 1, right, 2 * index + 2, pos, val);
-			tree[index] = tree[2 * index + 1] + tree[2 * index + 2];
-		}
-	
-	public:
-		SegmentTree(vector<ll>& nums) {
-			n = nums.size(); tree.resize(4 * n, 0); buildTree(nums, 0, n - 1, 0);
-		}
-	
-		ll query_sum(int qleft, int qright) {
-			return query_sum(0, n - 1, 0, qleft, qright);
-		}
-	
-		void update(int pos, ll val) {
-			update(0, n - 1, 0, pos, val);
-		}
-	};
+void update(int node_id, int left, int right, int idx, int val) {
+	// if ( idx < left || right < idx ) return ;
+	if (left == right) {
+		tree[node_id] = val;
+		return;
+	}
 
-void solve() {
-  ll n, m, num; cin >> n >> m;
-  vector<ll> arr(n); input(arr, n);
-	SegmentTree st = SegmentTree(arr);
-  ll t, a, b;
-  rep(i, m) {
-    cin >> t >> a >> b;
-    if (t == 1) {
-      st.update(a-1, b);
-    } else {
-      cout << st.query_sum(a-1, b-1) << ln;
-    }
-  }
+	int mid = (left + right) / 2;
+	// cout << mid << "\n";
+	if (mid < idx) update(2*node_id+1, mid+1, right, idx, val);
+	else update(2*node_id, left, mid, idx, val);
+
+	tree[node_id] = tree[2*node_id+1] + tree[2*node_id];
+}
+
+int query(int node_id, int left, int right, int ql, int qr) {
+	if (ql > right || qr < left) return 0;
+	if (ql <= left && right <= qr) return tree[node_id];
+	int mid = (left + right) / 2;
+	int l = query(2*node_id, left, mid, ql, qr);
+	int r = query(2*node_id+1, mid+1, right, ql, qr);
+	return l + r;
 }
 
 int main() {
-  flash;
-  solve();
+  cin.tie(0); cout.tie(0); ios_base::sync_with_stdio(0);
+  // int t; cin >> t;
+  // while(t--)
+
+	int n, q;
+	cin >> n >> q;
+
+	for (int i=1; i<=n; i++) {
+		int x;
+		cin >> x;
+		update(1, 1, n, i, x);
+		// for (int j=1; j<=n; j++) {
+		// 	cout << query(1, 1, n, j, j) << " ";
+		// }
+		// cout << "\n";
+	}
+
+	
+	
+	for (int i=0; i<q; i++) {
+		int type;
+		cin >> type;
+		if (type == 1) {
+			int k, u;
+			cin >> k >> u;
+			update(1, 1, n, k, u);
+		} else if (type == 2) {
+			int a, b;
+			cin >> a >> b;
+			cout << query(1, 1, n, a, b) << endl;
+		}
+	}
+
   return 0;
 }
